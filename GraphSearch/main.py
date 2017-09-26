@@ -1,3 +1,8 @@
+#David Claveau
+#Modified by Joshua Steward
+#September 26, 2017
+#Artificial Intelligence HW1
+
 from GraphAI import SearchTree, Node, Vertex
 from RomaniaGraph import graph
             
@@ -52,6 +57,7 @@ def F( search_type, pnode, node, neighbor ):
     elif (search_type == 'GRD'):
         node.fcost = node.GetVertex().GetValue()
     elif (search_type == 'AST'):
+        #adding the cost of the previous path to the weight and the heuristic for each node
         node.fcost = pnode.fcost + neighbor[1] + node.GetVertex().GetValue()
         
 #-----------------------------------------------------------
@@ -65,13 +71,6 @@ if __name__ == '__main__':
     root.parent = None
     
     search_tree = SearchTree(root)    
-    goal_node = GraphSearch( graph, search_tree, 'UCS', goal_state )
+    goal_node = GraphSearch( graph, search_tree, 'AST', goal_state )
     #goal_node.PrintParents()
     search_tree.PrintTree()
-    
-    
-"""
-Arad, sibiu, 
-
-Arad, sibiu, RV, Pitesti, Bucharest
-"""

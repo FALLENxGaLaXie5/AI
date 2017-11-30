@@ -2,6 +2,13 @@ from MDP import ValueIteration, ValueIterationStep, PolicyExtraction, QExtractio
 from GridMDP import GridMDP, orientations
 import time
 import random
+import serial
+
+
+validCommands = {"forward": b'f', "backward": b'b'}
+
+commandForward = b'f'
+commandTurn = b't'
 
 gridworld = GridMDP([[0.0, 0.0, 0.0, 0.0],
                      [0.0, None, 0.0, 0.0],
@@ -13,6 +20,29 @@ gridworld = GridMDP([[0.0, 0.0, 0.0, 0.0],
 #                      [0.0, 0.0, 0.0, 0.0, 0.0]], terminals=[((4, 3),1,(1,0)), ((4, 2),-1,(1,0))] )
 
 waiting = True
+
+
+ser = serial.Serial('/dev/cu.usbmodem1421', 9600)
+serialcmd = '5'
+serialcmd2 = '6'
+
+
+one = 1
+
+ser.write(commandForward)
+
+while True:
+	if one == 1:
+		ser.write(commandTurn)
+		one = 2
+		print(ser.readline())
+	elif one == 2:
+		ser.write(commandForward)
+		one = 1
+		print(ser.readline())
+
+	time.sleep(0.5)
+
 
 
 def onclick(event):
@@ -137,8 +167,8 @@ while i in range(2000):
 
 
             if checkAllZeros():
-                print(s)
-                print("This state is all zeros!")
+                #print(s)
+                #print("This state is all zeros!")
                 pol = random.randint(0, 3)
 
                 # if random.random() <= 0.2:
@@ -166,7 +196,7 @@ while i in range(2000):
                 elif pol == 3:
                     a = P5[s]
             elif checkAboveZero():
-                print("Not all zeros!")
+                #print("Not all zeros!")
                 ind = 0
                 maxN = Qs[s][0]
                 for i in range(1,4):
@@ -196,9 +226,10 @@ while i in range(2000):
 
 
 
-            print(s)
+            #print(s)
             for i in range(4):
-                print(Qs[s][i])
+                pass
+                #print(Qs[s][i])
             #for i in Qs[s]:
             #    print(i)
             #print(Qs[s])
@@ -227,12 +258,12 @@ while i in range(2000):
 
                 #This will deemphasize paths towards ghosts
                 Qs[s][a] = Qs[s][a] - 0.25
-                print(Qs[s][a])
+                #print(Qs[s][a])
                 gridworld.DrawQ(gridworld, s, a, Qs[s][a])
             else:
                 # do QL update
                 Qs[s][a] = (1 - alpha) * Qs[s][a] + alpha * (gridworld.R(sp) + max(Qs[sp][a] for a in range(4)))
-                print(Qs[s][a])
+                #print(Qs[s][a])
                 gridworld.DrawQ(gridworld, s, a, Qs[s][a])
 
             # else:
